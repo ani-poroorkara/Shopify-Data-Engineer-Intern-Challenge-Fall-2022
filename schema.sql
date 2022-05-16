@@ -6,8 +6,8 @@ CREATE TABLE users
 ( 
     user_id TEXT PRIMARY KEY,
 	email TEXT NOT NULL UNIQUE,
-	first_name TEXT NOT NULL,
-	last_name TEXT NOT NULL,
+	fname TEXT NOT NULL,
+	pass PASSWORD NOT NULL,
 	phone TEXT NOT NULL UNIQUE
 );
 
@@ -21,7 +21,8 @@ CREATE TABLE image_information
 ( 
     id INTEGER PRIMARY KEY,
     seller TEXT,
-    photo BLOB NOT NULL, 
+    img_name TEXT,
+    img BLOB NOT NULL, 
     discount INTEGER,
     price INTEGER NOT NULL,
     FOREIGN KEY(seller) REFERENCES users(user_id)
