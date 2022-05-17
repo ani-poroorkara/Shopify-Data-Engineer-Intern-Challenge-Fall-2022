@@ -28,7 +28,7 @@ def login():
             session["userid"]=data["user_id"]
             return redirect("profile")
         else:
-            flash("Username and Password Mismatch","danger")
+            print("Username and Password Mismatch")
     return redirect(url_for("index"))
 
 @app.route('/profile',methods=["GET","POST"])
@@ -49,9 +49,9 @@ def register():
             cur.execute("insert into users(user_id,email,fname,pass,phone)values(?,?,?,?,?)",(username,mail,fname,passw,contact))
             cur.execute("insert into login_info(email,pass)values(?,?)",(mail,passw))
             con.commit()
-            flash("Record Added  Successfully","success")
+            print("Record Added  Successfully success")
         except:
-            flash("Error in Insert Operation","danger")
+            print("Error in Insert Operation danger")
         finally:
             con.close()
             return redirect(url_for("index"))
@@ -62,25 +62,6 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for("index"))
-
-@app.route('/upload_img',methods=["GET","POST"])
-def profile():
-    if request.method=='POST':
-        try:
-            iname=request.form['iname']
-            img=request.form['img']
-            price=request.form['price']
-            discount=0
-            con=sqlite3.connect(r"database\shopifyimgrepo.db")
-            cur=con.cursor()
-            cur.execute("insert into image_information(seller,img_name,img BLOB,pass,phone)values(?,?,?,?,?)",(username,mail,fname,passw,contact))
-            con.commit()
-        except:
-            print("Error in Insert Operation danger")
-        finally:
-            con.close()
-            return redirect(url_for("index"))
-    return redirect(url_for("profile"))
 
 if __name__ == '__main__':
     app.run()
