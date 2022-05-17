@@ -32,6 +32,7 @@ def login():
             return redirect("profile")
         else:
             print("Username and Password Mismatch")
+            flash("Username/Password incorrect!", "error")
     return redirect(url_for("index"))
 
 # Register Page -- Home page
@@ -50,8 +51,9 @@ def register():
             cur.execute("insert into login_info(email,pass)values(?,?)",(mail,passw))
             con.commit()
             print("Record Added  Successfully success")
+            flash("User registered successfully!", "success")
         except:
-            print("Error in Insert Operation danger")
+            print("Error on registration!", "danger")
         finally:
             con.close()
             return redirect(url_for("index"))
@@ -61,7 +63,10 @@ def register():
 # Profile page -- after login
 @app.route('/profile',methods=["GET","POST"])
 def profile():
-    return render_template("profile.html")
+    if session["userid"]:
+        return render_template('profile.html')
+    else:
+        return render_template('index.html')
 
 # Profile page -- logout button
 @app.route('/logout')
