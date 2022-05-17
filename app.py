@@ -3,15 +3,18 @@ import sqlite3
 from sqlite3 import Error
 import os
 
+
 app = Flask(__name__)
 
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+# Home Page
 @app.route('/')
 def index():
     return render_template('index.html')
 
+#Login Page -- Home page
 @app.route('/login',methods=["GET","POST"])
 def login():
     if request.method=='POST':
@@ -31,10 +34,7 @@ def login():
             print("Username and Password Mismatch")
     return redirect(url_for("index"))
 
-@app.route('/profile',methods=["GET","POST"])
-def profile():
-    return render_template("profile.html")
-
+# Register Page -- Home page
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method=='POST':
@@ -58,6 +58,12 @@ def register():
             
     return redirect(url_for("index"))
 
+# Profile page -- after login
+@app.route('/profile',methods=["GET","POST"])
+def profile():
+    return render_template("profile.html")
+
+# Profile page -- logout button
 @app.route('/logout')
 def logout():
     session.clear()
