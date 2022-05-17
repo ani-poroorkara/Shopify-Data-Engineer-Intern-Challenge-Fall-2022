@@ -2,7 +2,9 @@ from flask import Flask, render_template,request,flash,redirect,url_for,session
 import sqlite3
 from sqlite3 import Error
 import os
+from werkzeug.utils import secure_filename
 
+from util_shopify import *
 
 app = Flask(__name__)
 
@@ -48,7 +50,6 @@ def register():
             con=sqlite3.connect(r"database\shopifyimgrepo.db")
             cur=con.cursor()
             cur.execute("insert into users(user_id,email,fname,pass,phone)values(?,?,?,?,?)",(username,mail,fname,passw,contact))
-            cur.execute("insert into login_info(email,pass)values(?,?)",(mail,passw))
             con.commit()
             print("Record Added  Successfully success")
             flash("User registered successfully!", "success")
@@ -64,7 +65,16 @@ def register():
 @app.route('/profile',methods=["GET","POST"])
 def profile():
     if session["userid"]:
-        return render_template('profile.html')
+        try:
+            conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+            conn.row_factory=sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("select * from image_information where seller=?",(session["userid"]))
+            rows = cursor.fetchall()
+            conn.close()
+        except sqlite3.Error as error:
+            flash("Something went wrong while uploading file to database!")
+        return render_template('profile.html', response = rows)
     else:
         return render_template('index.html')
 
@@ -73,6 +83,35 @@ def profile():
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+# Upload images -- profile page
+@app.route('/upload_img', methods=['GET','POST'])
+def upload_img():
+    if request.method == 'POST':
+        print(request.form)
+        print(request.files)
+        name_img=request.form['iname']
+        price=request.form['price']
+        destination_path=""
+        fileobj = request.files['file']
+        file_extensions =  ["JPG","JPEG","PNG","GIF"]
+        uploaded_file_extension = fileobj.filename.split(".")[1]
+        #validating file extension
+        if(uploaded_file_extension.upper() in file_extensions):
+            destination_path= f"temp_imgs/{fileobj.filename}"
+            fileobj.save(destination_path)
+        try:   
+            con=sqlite3.connect(r"database\shopifyimgrepo.db")
+            cur=con.cursor()
+            cur.execute("insert into image_information(seller,img_name,imgLink,discount,price)values(?,?,?,?,?)",(session["userid"],name_img,destination_path,0,price))
+            con.commit()
+            print("Record Added  Successfully success")
+            flash("Image Added Successfully")
+        except sqlite3.Error as error:
+            flash(f"{error}", "danger")
+        finally:
+            con.close()
+    return redirect(url_for("profile"))
 
 if __name__ == '__main__':
     app.run()

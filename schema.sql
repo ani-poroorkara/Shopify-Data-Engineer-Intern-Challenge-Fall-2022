@@ -11,18 +11,12 @@ CREATE TABLE users
 	phone TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE login_info
-( 
-	email TEXT PRIMARY KEY,
-	pass PASSWORD
-);
-
 CREATE TABLE image_information
 ( 
     id INTEGER PRIMARY KEY,
     seller TEXT,
-    img_name TEXT,
-    img BLOB NOT NULL, 
+    img_name TEXT NOT NULL,
+    imgLink TEXT NOT NULL,
     discount INTEGER,
     price INTEGER NOT NULL,
     FOREIGN KEY(seller) REFERENCES users(user_id)
