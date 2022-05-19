@@ -65,14 +65,17 @@ def register():
 @app.route('/profile',methods=["GET","POST"])
 def profile():
     if session["userid"]:
+        rows = []
+        print(session["userid"])
         try:
             conn=sqlite3.connect(r"database\shopifyimgrepo.db")
             conn.row_factory=sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute("select * from image_information where seller=?",(session["userid"]))
+            cursor.execute("select * from image_information where seller=(?)",(session["userid"],))
             rows = cursor.fetchall()
             conn.close()
         except sqlite3.Error as error:
+            print(error)
             flash("Something went wrong while uploading file to database!")
         return render_template('profile.html', response = rows)
     else:
@@ -114,4 +117,5 @@ def upload_img():
     return redirect(url_for("profile"))
 
 if __name__ == '__main__':
+    
     app.run()
