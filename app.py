@@ -66,7 +66,7 @@ def register():
 def profile():
     if session["userid"]:
         rows = []
-        print(session["userid"])
+        # print(session["userid"])
         try:
             conn=sqlite3.connect(r"database\shopifyimgrepo.db")
             conn.row_factory=sqlite3.Row
@@ -91,8 +91,8 @@ def logout():
 @app.route('/upload_img', methods=['GET','POST'])
 def upload_img():
     if request.method == 'POST':
-        print(request.form)
-        print(request.files)
+        # print(request.form)
+        # print(request.files)
         name_img=request.form['iname']
         price=request.form['price']
         destination_path=""
@@ -101,8 +101,9 @@ def upload_img():
         uploaded_file_extension = fileobj.filename.split(".")[1]
         #validating file extension
         if(uploaded_file_extension.upper() in file_extensions):
-            destination_path= f"temp_imgs/{fileobj.filename}"
+            destination_path= f"static/temp_imgs/{fileobj.filename}"
             fileobj.save(destination_path)
+            destination_path= f"temp_imgs/{fileobj.filename}"
         try:   
             con=sqlite3.connect(r"database\shopifyimgrepo.db")
             cur=con.cursor()
@@ -114,6 +115,22 @@ def upload_img():
             flash(f"{error}", "danger")
         finally:
             con.close()
+    return redirect(url_for("profile"))
+
+# Remove image -- profile page
+@app.route('/remove_img', methods=['GET','POST'])
+def remove_img():
+    if request.method == 'POST':
+        id_img = request.form['id_img']
+        try:
+            conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM image_information WHERE id=(?)",(id_img,))
+            conn.commit()
+            conn.close()
+        except sqlite3.Error as error:
+            print(error)
+            flash("Something went wrong while uploading file to database!")
     return redirect(url_for("profile"))
 
 if __name__ == '__main__':
