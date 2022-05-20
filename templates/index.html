@@ -168,12 +168,13 @@
               <div class="card-body">
                   <h5 class="card-title">{{item["img_name"]}}</h5>
                   {% if item["discount"] != 0 %}
-                    <h6 class="card-subtitle mb-2 text-muted">{{item["discount"]}} off</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{item["discount"]}}CAD off</h6>
+                    <h5 class="card-subtitle mb-2">Currently selling at <s>{{item["price"]}}</s> {{(item["price"])-(item["discount"])}} CAD</h5>
+                  {% else %}
+                    <h5 class="card-subtitle mb-2">Currently selling at {{item["price"]}} CAD</h5>
                   {% endif %}
-                  <h5 class="card-subtitle mb-2">Currently selling at {{item["price"]}}</h5>
-                  <figcaption class="blockquote-footer">
-                    Sold by <cite title="Source Title">{{item["seller"]}}</cite>
-                  </figcaption>
+
+                  <h6 class="card-subtitle mb-2 text-muted">Sold by <em>{{item["seller"]}}</em></h6>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-success">Buy</button>
