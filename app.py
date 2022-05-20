@@ -1,3 +1,4 @@
+from urllib import response
 from flask import Flask, render_template,request,flash,redirect,url_for,session
 import sqlite3
 from sqlite3 import Error
@@ -14,7 +15,18 @@ app.config['SECRET_KEY'] = SECRET_KEY
 # Home Page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    rows = []
+    try:
+        conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+        conn.row_factory=sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("select * from image_information")
+        rows = cursor.fetchall()
+        conn.close()
+    except sqlite3.Error as error:
+        print(error)
+        flash("Something went wrong while uploading file to database!")
+    return render_template('index.html', response=rows)
 
 #Login Page -- Home page
 @app.route('/login',methods=["GET","POST"])
