@@ -30,12 +30,15 @@
               <li><a href="#" class="text-white">Email me</a></li>
             </ul>
           </div>
+          {% if session["userid"] %}
+            <a class="btn btn-danger my-2" href="/logout">Logout</a>
+          {% endif %}
         </div>
       </div>
     </div>
     <div class="navbar navbar-dark bg-dark shadow-sm">
       <div class="container">
-        <a href="#" class="navbar-brand d-flex align-items-center">
+        <a href="/" class="navbar-brand d-flex align-items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
           <strong>Shopify Image Repository</strong>
         </a>
@@ -52,11 +55,19 @@
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <h1 class="fw-light">Welcome to Shopify Image Repository</h1>
-          <p class="lead text-muted">Login to buy and sell images :)</p>
-          <p>
-            <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Login</button>
-            <button type="button" class="btn btn-secondary my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Registration</button>
-          </p>
+          {% block content %}
+            {% if session["userid"] %}
+              <p class="lead text-muted">Hello {{session["name"]}}</p>
+              <p class="lead text-muted">What are your plans for today?</p>
+            {% else %}
+              <p class="lead text-muted">Login to buy and sell images :)</p>
+              <p>
+                <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Login</button>
+                <button type="button" class="btn btn-secondary my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Registration</button>
+              </p>
+            {% endif %}
+          {% endblock content %}
+
         <!-- Modal for login-->
           <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
