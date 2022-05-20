@@ -114,7 +114,40 @@
 
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-info" >Add Discount</button>
+                      <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop_discount">Add Discount</button>
+                      <div class="modal fade" id="staticBackdrop_discount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Add Discount to {{item["img_name"]}}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form method="POST" action="/add_discount">
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                        {% for category,message in messages %}
+                                            <div class="alert alert-{{category}}">{{message}}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                
+                                <div class="form-group">
+                                    <label>How much discount do you wish to add (in CAD)?</label>
+                                    <input type="text" class="form-control" name="discount" value="{{item["discount"]}}" required> 
+                                    <input type="text" class="form-control" name="id_img" value="{{item["id"]}}" readonly required>
+                                </div>
+                
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-danger btn-block" value="Confirm">
+                                    <button data-bs-dismiss="modal" class="btn btn-primary btn-block">Back</button>
+                                </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                       <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop_remove">Remove</button>
 
                       <div class="modal fade" id="staticBackdrop_remove" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -136,7 +169,7 @@
                 
                                 <div class="form-group">
                                     <label>Are you sure you wish to continue?</label>
-                                    <input type="text" class="form-control" name="id_img" value="{{item["id"]}}" required> 
+                                    <input type="text" class="form-control" name="id_img" value="{{item["id"]}}" readonly required> 
                                 </div>
                 
                                 <div class="form-group">

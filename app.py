@@ -133,6 +133,23 @@ def remove_img():
             flash("Something went wrong while uploading file to database!")
     return redirect(url_for("profile"))
 
+
+# Add discount -- profile page
+@app.route('/add_discount', methods=['GET','POST'])
+def add_discount():
+    id_img = request.form['id_img']
+    discount = request.form['discount']
+    print(request.form)
+    try:
+        conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+        cursor = conn.cursor()
+        cursor.execute("UPDATE image_information SET discount=(?) WHERE id=(?)",(discount,id_img))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as error:
+        print(error)
+        flash("Something went wrong while uploading file to database!")
+    return redirect(url_for("profile"))
+
 if __name__ == '__main__':
-    
     app.run()
