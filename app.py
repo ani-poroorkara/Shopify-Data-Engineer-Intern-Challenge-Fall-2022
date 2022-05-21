@@ -132,7 +132,7 @@ def upload_img():
 # Remove image -- profile page
 @app.route('/remove_img', methods=['GET','POST'])
 def remove_img():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['confirm'] == 'Confirm':
         id_img = request.form['id_img']
         try:
             conn=sqlite3.connect(r"database\shopifyimgrepo.db")

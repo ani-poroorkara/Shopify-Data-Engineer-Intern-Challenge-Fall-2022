@@ -59,6 +59,7 @@
             {% if session["userid"] %}
               <p class="lead text-muted">Hello {{session["name"]}}</p>
               <p class="lead text-muted">What are your plans for today?</p>
+              <a class="btn btn-outline-info" href="/profile" role="button">Go to your inventory</a>
             {% else %}
               <p class="lead text-muted">Login to buy and sell images :)</p>
               <p>
