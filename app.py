@@ -5,7 +5,6 @@ from sqlite3 import Error
 import os
 from werkzeug.utils import secure_filename
 
-from util_shopify import *
 
 app = Flask(__name__)
 

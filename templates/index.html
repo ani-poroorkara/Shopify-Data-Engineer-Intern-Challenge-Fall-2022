@@ -163,8 +163,9 @@
   
           {% for item in response %}
           <div class="col">
-            <div class="card shadow-sm">
-              <img src="{{url_for('static', filename=item["imgLink"])}}" class="card-img-top" alt="">
+            
+            <div class="card shadow-sm" style="width: 18rem;">
+              <img src="{{url_for('static', filename=item["imgLink"])}}" class="card-img-top" >
 
               <div class="card-body">
                   <h5 class="card-title">{{item["img_name"]}}</h5>
@@ -179,11 +180,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="/buy_page/{{item["id"]}}" class="btn btn-outline-success">Buy item</a>
                 </div>
-                </div>
               </div>
             </div>
+            
           </div>
           {% endfor %}
+        </div>
+          
 
         </div>
       </div>
