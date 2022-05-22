@@ -12,20 +12,32 @@ app = Flask(__name__)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+
 # Home Page
 @app.route('/')
 def index():
-    rows = []
+    try: 
+        if session["logged"]:
+            print("Session started")
+    except KeyError as error:
+        print("Setting Session..")
+        session["logged"] = 0
+        
     try:
+        rows = []
         conn=sqlite3.connect(r"database\shopifyimgrepo.db")
         conn.row_factory=sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute("select * from image_information")
+        if session["logged"] == 1:
+            cursor.execute("select * from image_information WHERE seller NOT LIKE (?)",(session["userid"],))
+        else:
+            cursor.execute("select * from image_information")
         rows = cursor.fetchall()
         conn.close()
     except sqlite3.Error as error:
         print(error)
         flash("Something went wrong while uploading file to database!")
+
     return render_template('index.html', response=rows)
 
 #Login Page -- Home page
@@ -43,7 +55,7 @@ def login():
         if data:
             session["name"]=data["fname"]
             session["userid"]=data["user_id"]
-            return redirect("profile")
+            session["logged"]=1
         else:
             print("Username and Password Mismatch")
             flash("Username/Password incorrect!", "error")
@@ -97,6 +109,7 @@ def profile():
 @app.route('/logout')
 def logout():
     session.clear()
+    session["logged"]=0
     return redirect(url_for("index"))
 
 # Upload images -- profile page
