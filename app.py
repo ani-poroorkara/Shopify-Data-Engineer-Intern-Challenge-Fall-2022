@@ -163,5 +163,42 @@ def add_discount():
         flash("Something went wrong while uploading file to database!")
     return redirect(url_for("profile"))
 
+
+# item bought -- Buy page
+@app.route('/buy_page/<id_img>', methods=['GET','POST'])
+def buy_page(id_img):
+    if session["userid"]:
+        try:
+            conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+            conn.row_factory=sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("select * from image_information where id=(?)",(id_img,))
+            row = cursor.fetchone()
+            conn.close()
+        except sqlite3.Error as error:
+            print(error)
+            flash("Something went wrong while uploading file to database!")
+        return render_template('buy.html', response = row)
+    else:
+        return redirect(url_for("index"))
+
+
+# Buy page
+@app.route('/buy_item/<id_img>', methods=['GET','POST'])
+def buy_item(id_img):
+    if session["userid"]:
+        try:
+            conn=sqlite3.connect(r"database\shopifyimgrepo.db")
+            cursor = conn.cursor()
+            cursor.execute("UPDATE image_information SET seller=(?) WHERE id=(?)",(session["userid"],id_img))
+            conn.commit()
+            conn.close()
+        except sqlite3.Error as error:
+            print(error)
+            flash("Something went wrong while uploading file to database!")
+        return render_template('order_confirmation.html')
+    else:
+        return redirect(url_for("index"))
+
 if __name__ == '__main__':
     app.run()
